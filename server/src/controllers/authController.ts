@@ -34,6 +34,7 @@ export const signup = async (req: Request, res: Response) => {
 
     res.status(201).json({ user, token });
   } catch (error: any) {
+    console.error('Signup error:', error);
     if (error.code === '23505') {
       res.status(400).json({ error: 'Email already exists' });
     } else {
@@ -72,6 +73,7 @@ export const login = async (req: Request, res: Response) => {
       token
     });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
