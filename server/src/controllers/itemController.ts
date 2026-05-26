@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { query } from '../db/index';
-import { supabase } from '../services/supabase';
+import { getSupabase } from '../services/supabase';
 
 export const getItems = async (req: AuthRequest, res: Response) => {
   try {
@@ -79,6 +79,7 @@ export const uploadItem = async (req: AuthRequest, res: Response) => {
     const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '-');
     const path = `${req.userId}/${Date.now()}-${safeName}`;
 
+    const supabase = getSupabase();
     const { error: uploadError } = await supabase.storage
       .from(bucket)
       .upload(path, file.buffer, {

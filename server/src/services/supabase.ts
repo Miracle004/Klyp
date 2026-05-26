@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 type SupabaseConfig = {
   url: string;
@@ -16,11 +16,17 @@ const getSupabaseConfig = (): SupabaseConfig => {
   return { url, serviceRoleKey };
 };
 
-const { url, serviceRoleKey } = getSupabaseConfig();
+let _supabase: SupabaseClient | null = null;
 
-export const supabase = createClient(url, serviceRoleKey, {
-  auth: {
-    persistSession: false,
-    autoRefreshToken: false,
-  },
-});
+export const getSupabase = (): SupabaseClient => {
+  if (!_supabase) {
+    const { url, serviceRoleKey } = getSupabaseConfig();
+    _supabase = createClient(url, serviceRoleKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
+  }
+  return _supabase;
+};
